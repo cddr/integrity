@@ -1,6 +1,7 @@
 (ns schema.contrib.number
   (:require [schema.core :as s]
-            [schema.utils :as utils]))
+            [schema.utils :as utils]
+            [schema.contrib.human :refer :all]))
 
 (defn lt [high]
   (s/pred (fn [x]

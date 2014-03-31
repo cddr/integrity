@@ -29,14 +29,23 @@
                   (print (show-val e parent) "is not eq with"
                          (second (:expectation e)))))})
 
+(defn human-expectation? [expectation]
+  (and (list? expectation)
+       (symbol? (first (first expectation)))))
+
 (extend schema.core.Predicate
   ValidationTranslator
   {:translate (fn [schema error parent]
                 (with-out-str
                   (print (show-val error parent) "is not ")
-                  (apply print (let [[op & args] (first (:expectation error))]
-                                 (conj (interpose "and" (map humanize args))
-                                       (humanize op))))))})
+                  (apply print (cond
+                                (human-expectation? (:expectation error))
+                                (let [[op & args] (first (:expectation error))]
+                                  (conj (interpose "and" (map humanize args))
+                                       (humanize op)))
+
+                                true
+                                (:expectation error)))))})
 
 (extend schema.core.Either
  ValidationTranslator
