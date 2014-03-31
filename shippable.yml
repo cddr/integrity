@@ -3,4 +3,4 @@ language: java
 jdk:
  - oraclejdk7
 before_install:
- - ./scripts/prepare
+ - bash ./scripts/prepare.sh
