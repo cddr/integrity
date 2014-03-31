@@ -56,7 +56,12 @@ for end-users
     100 fails all of the following:-
       it is not a java.lang.String
       it is not gt 42
-    =>nil   
+    =>nil
+
+When using schema's `pred` type constructor, be sure to give your predicate
+a name which satisfies the function `human-expectation?`. This should ensure
+that the information needed by `ValidationTransformer` to print a human
+readable message is attached to your predicate function.
     
 ## License
 
