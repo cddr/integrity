@@ -33,6 +33,13 @@
   (and (list? expectation)
        (symbol? (first (first expectation)))))
 
+(extend schema.core.EnumSchema
+  ValidationTranslator
+  {:translate (fn [schema error parent]
+                (with-out-str
+                  (print (show-val error parent) "is not one of ")
+                  (print (.vs (:schema error)))))})
+
 (extend schema.core.Predicate
   ValidationTranslator
   {:translate (fn [schema error parent]

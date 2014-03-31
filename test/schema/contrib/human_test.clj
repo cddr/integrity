@@ -19,6 +19,10 @@
                                          `(even))
                                  1)))))
 
+  (testing "enum"
+    (is (= "1 is not one of #{2 3 4}"
+           (human-explain (check (s/enum 2 3 4) 1)))))
+
   (testing "either"
     (is (= "1 fails all of the following:-
   it is not a java.lang.String
