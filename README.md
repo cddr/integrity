@@ -59,7 +59,7 @@ for end-users
     (show-errors {:yolo 100})
     100 fails all of the following:-
       it is not a java.lang.String
-      it is not gt 42
+      it is not lt 42
     =>nil
 
 When using schema's `pred` type constructor, be sure to give your predicate
