@@ -4,6 +4,10 @@ The schema contributitons library is a collection of namespaces, each
 of which implements features that we believe may be useful to a large
 part of the `prismatic/schema` community.
 
+## Status
+
+ * ![Build Status](https://travis-ci.org/cddr/schema.contrib.svg)
+
 ## Usage
 
 ### schema.contrib.number
