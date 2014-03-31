@@ -2,3 +2,5 @@ language: java
   # jdk tag
 jdk:
  - oraclejdk7
+before_install:
+ - ./scripts/prepare
