@@ -69,7 +69,6 @@
                                   (.-schemas schema))]
                    (println " " exp))))})
 
-
 (extend java.lang.Class
   ValidationTranslator
   {:translate (fn [schema error parent]
@@ -80,4 +79,3 @@
   (when check-result
     (let [error (error check-result)]
       (translate (:schema error) error nil))))
-
