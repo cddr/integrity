@@ -1,6 +1,0 @@
-language: java
-  # jdk tag
-jdk:
- - oraclejdk7
-before_install:
- - bash ./scripts/prepare.sh
