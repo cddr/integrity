@@ -9,6 +9,10 @@
     (is (= "42 is not a java.lang.String"
            (human-explain (check s/Str 42)))))
 
+  (testing "eq"
+    (is (= "1 is not eq with 42"
+           (human-explain (check (s/eq 42) 1)))))
+
   (testing "either"
     (is (= "1 fails all of the following:-
   it is not a java.lang.String

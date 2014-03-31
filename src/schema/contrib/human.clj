@@ -22,6 +22,13 @@
 (defprotocol ValidationTranslator
   (translate [schema error parent]))
 
+(extend schema.core.EqSchema
+  ValidationTranslator
+  {:translate (fn [schema e parent]
+                (with-out-str
+                  (print (show-val e parent) "is not eq with"
+                         (second (:expectation e)))))})
+
 (extend schema.core.Predicate
   ValidationTranslator
   {:translate (fn [schema error parent]
@@ -45,7 +52,6 @@
                                                    e))))
                                   (.-schemas schema))]
                    (println " " exp))))})
-
 
 
 (extend java.lang.Class
