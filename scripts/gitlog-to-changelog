@@ -1,0 +1,17 @@
+require 'rugged'
+
+repo = Rugged::Repository.new("./")
+walker = Rugged::Walker.new(repo)
+walker.sorting(Rugged::SORT_DATE)
+walker.push(repo.head.target)
+
+puts "# Changelog"
+puts ""
+puts "## Unreleased Changes"
+puts ""
+
+walker.each do |c|
+  msg_head, *msg_body = c.message.lines
+  puts "### #{msg_head}"
+  puts msg_body
+end
