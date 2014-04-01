@@ -12,6 +12,6 @@ puts ""
 
 walker.each do |c|
   msg_head, *msg_body = c.message.lines
-  puts "### #{msg_head}"
+  puts " * #{msg_head}"
   puts msg_body
 end
