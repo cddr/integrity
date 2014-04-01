@@ -2,6 +2,7 @@
 
 ## Unreleased Changes
 
+### Add note about contributing in README
 ### Add script to automatically maintain Changelog.md
 ### Refactor to human-explain to support easier internationalization
 ### Fix typo in README docs
