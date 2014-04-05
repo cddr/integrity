@@ -11,7 +11,8 @@ function test_generate_docs {
     lein doc
     if ( assert_exists doc/index.html &&
             assert_exists doc/schema.contrib.human.html &&
-            assert_exists doc/schema.contrib.number.html ); then
+            assert_exists doc/schema.contrib.number.html &&
+            assert_exists doc/schema.contrib.hal.html ); then
         exit 0
     else
         echo "Failed to generate documentation"
