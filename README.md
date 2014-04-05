@@ -80,8 +80,18 @@ to the community
 
 If you have an idea for a feature, make github issue and lets talk about it
 
-Consider adding this [pre-commit hook](https://gist.github.com/cddr/9906472) to
-your local repo to ensure the Changelog is kept up-to-date
+### Developer Tooling
+
+Please consider adding this [pre-commit hook](https://gist.github.com/cddr/9906472)
+to your local repo to ensure the Changelog is kept up-to-date
+
+### Running the tests
+
+Before issuing a pull request, please use the following command to ensure
+the unit tests pass and the API docs can be generated
+```
+$ lein do clean, test && bash test/tooling.sh
+```
     
 ## License
 

@@ -2,6 +2,16 @@
 
 ## Unreleased Changes
 
+ * Add support for generating API documentation
+
+To generate project docs using codox, run
+
+    $ lein doc
+
+On pushes to the github repo, travis will attempt to generate the docs
+and the tests will fail if [test/tooling.sh]
+(https://github.com/cddr/schema.contrib/blob/master/test/tooling.sh)
+returns a non-zero exit code
  * Add test for generating documentation
  * Fix README formatting
  * Make the changelog a little prettier

@@ -1,9 +1,19 @@
+;; The schema `check` function returns an object which is not really suitable
+;; for displaying an error to an end-user. However, it usually contains enough
+;; information to generate one. This library parses the return value of an invocation
+;; of `check` and generates human readable error messages
+
 (ns schema.contrib.human
   (:require [schema.core :as s]
             [schema.utils :as utils]
             [taoensso.tower :as tower :refer (t *locale*)]))
 
-(def dictionary
+;; ### Support for internationalization
+
+(def ^{:private true}
+  dictionary
+  "`dictionary` defines translations so that error messages in multiple
+languages can be easily supported"
   {:dev-mode? true
    :fallback-locale :en
    :dictionary
@@ -16,18 +26,26 @@
           :fails-all    "fails all of the following:-"
           :is-not-a     "is not a"}}}})
 
-(defn- humanize [v]
-  (if (symbol? v)
-    (str (name v))
-    v))
-
-(defn- tval [key]
+(defn- tval
+  "`tval` returns the translation for the specified language independent key"
+  [key]
   (t *locale* dictionary key))
 
-(defn- show-val [err parent]
+(defn- show-val
+  "`show-val` returns the failing input value, or if that value has
+been displayed already, the 'third-person singular pronoun'"
+ [err parent]
   (if (nil? parent)
     (:value err)
     (tval ::it)))
+
+(defn- humanize
+  "`humanize` takes a value and returns a human readable representation
+of that value"
+ [v]
+  (if (symbol? v)
+    (str (name v))
+    v))
 
 (defn- error [check-result]
   {:explain (utils/.-fail-explanation check-result)
@@ -37,7 +55,12 @@
    :fail-explanation (utils/.-fail-explanation check-result)})
 
 (defprotocol ValidationTranslator
-  (translate [schema error parent]))
+  "A `ValidationTranslator` knows how to translate a `schema.util.ValidationError`
+into a message intended for an end-user"
+  (translate [schema error parent]
+    "Uses `schema` to help translates the `error` into an end-user error message
+
+TODO: refactor to avoid ['control coupling'](http://robots.thoughtbot.com/types-of-coupling)"))
 
 (extend schema.core.EqSchema
   ValidationTranslator
@@ -46,7 +69,7 @@
                   (print (show-val e parent) (tval ::not-eq)
                          (second (:expectation e)))))})
 
-(defn human-expectation? [expectation]
+(defn- human-expectation? [expectation]
   (and (list? expectation)
        (symbol? (first (first expectation)))))
 
