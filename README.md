@@ -69,15 +69,16 @@ readable message is attached to your predicate function.
 
 ## Contributing
 
-1. If you've found a bug, you have the following options, ordered by usefulness
-   to the community
-    1.1 Issue a pull request that contains a test that fails against a released
-        version, together with a change that fixes the test.
-    1.2 Create an issue describing the minimal steps to reproduce; the version
-        of the project you are using; what you see; and what you expected to see
-    1.3 Create an issue describing the problem in as much detail as you can
+If you've found a bug, you have the following options, ordered by usefulness
+to the community
 
-2. If you have an idea for a feature, make github issue and lets talk about it
+1. Issue a pull request that contains a test that fails against a released
+   version, together with a change that fixes the test.
+2. Create an issue describing the minimal steps to reproduce; the version
+   of the project you are using; what you see; and what you expected to see
+3. Create an issue describing the problem in as much detail as you can
+
+If you have an idea for a feature, make github issue and lets talk about it
 
 Consider adding this [pre-commit hook](https://gist.github.com/cddr/9906472) to
 your local repo to ensure the Changelog is kept up-to-date

@@ -2,6 +2,7 @@
 
 ## Unreleased Changes
 
+ * Fix README formatting
  * Make the changelog a little prettier
  * Add note about contributing in README
  * Add script to automatically maintain Changelog.md
