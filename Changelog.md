@@ -2,6 +2,7 @@
 
 ## Unreleased Changes
 
+ * Add test for generating documentation
  * Fix README formatting
  * Make the changelog a little prettier
  * Add note about contributing in README
