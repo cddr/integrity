@@ -31,43 +31,12 @@ the tests
 
 ### schema.contrib.human
 
-`schema.contrib.human` provides functions that produce errors intended
-for end-users
+When some data input is checked against some schema, `prismatic/schema`
+returns a ValidationError object. The `human-explain` function translates
+this error object into a message that should be surfaceable to an end-user.
+For example usage, see the tests
 
-    (ns my.app
-      (:require [schema.contrib.human :as hum]
-                [schema.contrib.number :as num]
-                [schema.core :as s]))
-    
-    (defn show-errors [input-val]
-      (human-explain (s/check
-                       {:name s/Str
-                        :age (num/gt 21)})
-        input-val))
-    
-    (show-errors {:name "foo" :age 25})
-    =>nil
-    
-    (show-errors {:name 42 :age 25})
-    42 is not a valid java.lang.String
-    =>nil
-    
-    (show-errors {:name "Billy the kid" :age 18})
-    18 is not gt 21
-    =>nil
-    
-    (defn show-composite-errors [input-val]
-      (human-explain (s/check
-                       {:yolo (s/either
-                                s/Str
-                                (num/lt 42))})
-        input-val))
-    
-    (show-errors {:yolo 100})
-    100 fails all of the following:-
-      it is not a java.lang.String
-      it is not lt 42
-    =>nil
+[Human Explain Tests](https://github.com/cddr/schema.contrib/blob/next/test/schema/contrib/hal_test.clj)
 
 When using schema's `pred` type constructor, be sure to give your predicate
 a name which satisfies the function `human-expectation?`. This should ensure
@@ -76,15 +45,14 @@ readable message is attached to your predicate function.
 
 ### schema.contrib.number
 
-`schema.contrib.number` provides helpers for building number validators
+Schema defines a `pred` utility which builds a schema that matches it's
+input if the supplied predicate returns true. Here, we use this to build
+numeric schemas that can be more specific than just a type of number.
 
-    (ns my.app
-      (:require [schema.contrib.number :as num]))
+For example `(gt 21)` builds a schema one could use to ensure the input
+data is old enough to buy booze. For more examples, see the tests
 
-    (def schema
-      {:rev-share (num/between 0 1)
-       :age (num/gt 21)
-       :income (num/lt 100000)})
+[Number Tests](https://github.com/cddr/schema.contrib/blob/next/test/schema/contrib/number_test.clj)
 
 ### schema.contrib.walkers
 
