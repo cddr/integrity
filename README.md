@@ -1,5 +1,7 @@
 # schema.contrib
 
+![The Schema Toolbox](resources/icon.png)
+
 The schema contributitons library is a collection of namespaces, each
 of which implements features that we believe may be useful to a large
 part of the `prismatic/schema` community.
@@ -119,6 +121,12 @@ the unit tests pass and the API docs can be generated
 ```
 $ lein do clean, test && bash test/tooling.sh
 ```
+
+## Credits
+
+[Tree Icon](https://www.iconfinder.com/icons/60170/content_tree_icon#size=256) designed by
+[Custom Icon Design](http://www.customicondesign.com) from iconfinder is licensed for
+non-commercial use
     
 ## License
 
