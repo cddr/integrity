@@ -2,9 +2,10 @@
 
 ![The Schema Toolbox](resources/icon.png)
 
-The schema contributitons library is a collection of namespaces, each
-of which implements features that we believe may be useful to a large
-part of the `prismatic/schema` community.
+The [Schema Project](https://github.com/Prismatic/schema) is aimed at
+providing a method of defining the "shape" of your public data structures.
+This library is a collection of Schema utilities that we believe may be
+useful to a large part of the community.
 
 ## Status
 
