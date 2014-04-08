@@ -27,6 +27,16 @@ the tests
 
 [HAL Tests](https://github.com/cddr/schema.contrib/blob/next/test/schema/contrib/hal_test.clj)
 
+### schema.contrib.walkers
+
+Schema walker generators take a schema as input, and use it to return a
+function that walks input data in-step with the the corresponding schema. For
+example, the `lookup` walker replaces "references" in the input document
+with the result of looking them up in an external data source. For example
+usage, see the tests
+
+[Walker Tests](https://github.com/cddr/schema.contrib/blob/next/test/schema/contrib/walkers_test.clj)
+
 ### schema.contrib.number
 
 `schema.contrib.number` provides helpers for building number validators
