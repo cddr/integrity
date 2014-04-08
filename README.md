@@ -29,28 +29,6 @@ the tests
 
 [HAL Tests](https://github.com/cddr/schema.contrib/blob/next/test/schema/contrib/hal_test.clj)
 
-### schema.contrib.walkers
-
-Schema walker generators take a schema as input, and use it to return a
-function that walks input data in-step with the the corresponding schema. For
-example, the `lookup` walker replaces "references" in the input document
-with the result of looking them up in an external data source. For example
-usage, see the tests
-
-[Walker Tests](https://github.com/cddr/schema.contrib/blob/next/test/schema/contrib/walkers_test.clj)
-
-### schema.contrib.number
-
-`schema.contrib.number` provides helpers for building number validators
-
-    (ns my.app
-      (:require [schema.contrib.number :as num]))
-    
-    (def schema
-      {:rev-share (num/between 0 1)
-       :age (num/gt 21)
-       :income (num/lt 100000)})
-
 ### schema.contrib.human
 
 `schema.contrib.human` provides functions that produce errors intended
@@ -95,6 +73,28 @@ When using schema's `pred` type constructor, be sure to give your predicate
 a name which satisfies the function `human-expectation?`. This should ensure
 that the information needed by `ValidationTransformer` to print a human
 readable message is attached to your predicate function.
+
+### schema.contrib.number
+
+`schema.contrib.number` provides helpers for building number validators
+
+    (ns my.app
+      (:require [schema.contrib.number :as num]))
+
+    (def schema
+      {:rev-share (num/between 0 1)
+       :age (num/gt 21)
+       :income (num/lt 100000)})
+
+### schema.contrib.walkers
+
+Schema walker generators take a schema as input, and use it to return a
+function that walks input data in-step with the the corresponding schema. For
+example, the `lookup` walker replaces "references" in the input document
+with the result of looking them up in an external data source. For example
+usage, see the tests
+
+[Walker Tests](https://github.com/cddr/schema.contrib/blob/next/test/schema/contrib/walkers_test.clj)
 
 ## Contributing
 
