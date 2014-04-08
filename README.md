@@ -10,6 +10,23 @@ part of the `prismatic/schema` community.
 
 ## Usage
 
+Add the latest version into your dependencies
+
+```
+(defproject
+  :dependencies [[cddr/schema.contrib "0.1.0"]])
+```
+
+### schema.contrib.hal
+
+HAL is the [hypertext application language](http://stateless.co/hal_specification.html)
+As summary at the link above describes, HAL based APIs are easily discoverable by
+client applications. The vars in this namespace may be helpful when generating
+walkers that require knowledge of HAL data-structures. For example usage, see
+the tests
+
+[HAL Tests](https://github.com/cddr/schema.contrib/blob/next/test/schema/contrib/hal_test.clj)
+
 ### schema.contrib.number
 
 `schema.contrib.number` provides helpers for building number validators
