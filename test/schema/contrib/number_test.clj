@@ -1,7 +1,7 @@
 (ns schema.contrib.number-test
   (:require [clojure.test :refer :all]
             [schema.core :refer [check]]
-            [schema.contrib.number :refer [gt lt between]]
+            [schema.contrib.number :refer [gt gte lt lte between]]
             [schema.contrib.human :refer [human-explain]]))
 
 (deftest number-test-unit
@@ -10,10 +10,20 @@
     (is (= "1.5 is not lt 1"
            (human-explain (check (lt 1) 1.5)))))
 
+  (testing "lte"
+    (is (nil? (check (lte 1) 1)))
+    (is (= "1.5 is not lte 1"
+           (human-explain (check (lte 1) 1.5)))))
+
   (testing "gt"
     (is (nil? (check (gt 1) 1.5)))
     (is (= "0.5 is not gt 1"
            (human-explain (check (gt 1) 0.5)))))
+
+  (testing "gte"
+    (is (nil? (check (gte 1) 1)))
+    (is (= "0.5 is not gte 1"
+           (human-explain (check (gte 1) 0.5)))))
 
   (testing "between"
     (is (nil? (check (between 1 5) 3)))
