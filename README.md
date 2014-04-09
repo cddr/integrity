@@ -22,8 +22,8 @@ Add the latest version into your dependencies
 
 ### schema.contrib.hal
 
-HAL is the [hypertext application language](http://stateless.co/hal_specification.html)
-As summary at the link above describes, HAL based APIs are easily discoverable by
+HAL is the [hypertext application language](http://stateless.co/hal_specification.html).
+As the summary at the link above describes, HAL based APIs are easily discoverable by
 client applications. The vars in this namespace may be helpful when generating
 walkers that require knowledge of HAL data-structures. For example usage, see
 the tests
@@ -76,19 +76,14 @@ to the community
    of the project you are using; what you see; and what you expected to see
 3. Create an issue describing the problem in as much detail as you can
 
-If you have an idea for a feature, make github issue and lets talk about it
-
-### Developer Tooling
-
-Please consider adding this [pre-commit hook](https://gist.github.com/cddr/9906472)
-to your local repo to ensure the Changelog is kept up-to-date
+If you have an idea for a feature, make a github issue and lets talk about it
 
 ### Running the tests
 
 Before issuing a pull request, please use the following command to ensure
 the unit tests pass and the API docs can be generated
 ```
-$ lein do clean, test && bash test/tooling.sh
+$ lein do clean, test
 ```
 
 ## Credits
