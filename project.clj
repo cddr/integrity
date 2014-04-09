@@ -1,4 +1,4 @@
-(defproject schema.contrib "0.1.0"
+(defproject schema.contrib "0.2.0-SNAPSHOT"
   :description "A collection of namespaces that operate on prismatic/schema
 metadata and functions"
   :url "https://github.com/cddr/schema.contrib"
@@ -12,5 +12,5 @@ metadata and functions"
                  [codox-md "0.2.0"]]
   :plugins [[codox "0.6.7"]]
   :codox {:writer codox-md.writer/write-docs
-          :output-dir "doc/v0.1.0"
-          :src-dir-uri "http://github.com/cddr/schema.contrib/blob/v0.1.0/"})
+          :output-dir "doc/v0.2.0"
+          :src-dir-uri "http://github.com/cddr/schema.contrib/blob/v0.2.0/"})
