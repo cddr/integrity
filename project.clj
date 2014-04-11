@@ -13,4 +13,9 @@ metadata and functions"
   :plugins [[codox "0.6.7"]]
   :codox {:writer codox-md.writer/write-docs
           :output-dir "doc/v0.2.0"
-          :src-dir-uri "http://github.com/cddr/schema.contrib/blob/v0.2.0/"})
+          :src-dir-uri "http://github.com/cddr/schema.contrib/blob/v0.2.0/"}
+
+
+  :profiles
+  {:test {:dependencies [[com.datomic/datomic-free "0.9.4707"]]}
+   :dev {:dependencies [[com.datomic/datomic-free "0.9.4707"]]}})
