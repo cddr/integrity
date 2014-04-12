@@ -11,8 +11,8 @@
    :db/cardinality :db.cardinality/one
    :db.install/_attribute :db.part/db})
 
-(deftest attributes-test
-  (testing "can generate datomic attribute transactions"
+(deftest datomic-test
+  (testing "attributes for basic datomic types"
     (let [schema {:a Str
                   :b Num
                   :c Boolean
@@ -27,3 +27,4 @@
                         :e :db.type/float
                         }))
              (set (map dissoc-id (db/attributes schema (constantly 42)))))))))
+
