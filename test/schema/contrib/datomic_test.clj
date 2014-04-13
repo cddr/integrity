@@ -1,30 +1,27 @@
 (ns schema.contrib.datomic-test
   (:require [clojure.test :refer :all]
-            [schema.core :as s :refer [Str Num]]
+            [schema.core :as s :refer [Str Bool Num Int Inst]]
             [datomic.api :as d]
             [schema.contrib.datomic :as db]
             [clojure.data :as data]))
 
-(defn dattr [name type]
-  {:db/ident name
-   :db/valueType type
-   :db/cardinality :db.cardinality/one
-   :db.install/_attribute :db.part/db})
-
 (deftest datomic-test
-  (testing "attributes for basic datomic types"
-    (let [schema {:a Str
-                  :b Num
-                  :c Boolean
-                  :d Long
-                  :e Float}
-          dissoc-id #(dissoc %1 :db/id)]
-      (is (= (set (map #(dattr (key %) (val %))
-                       {:a :db.type/string
-                        :b :db.type/double
-                        :c :db.type/boolean
-                        :d :db.type/long
-                        :e :db.type/float
-                        }))
-             (set (map dissoc-id (db/attributes schema (constantly 42)))))))))
+  (testing "ident is copied from schema"
+    (let [test-attr ((db/attribute :yolo Str) 42)]
+      (= :foo (:db/ident test-attr))))
 
+  (testing "single valued attributes"
+    (let [test-attr (fn [attr]
+                      ((db/attribute :yolo attr) 42))
+          val-type (fn [schema-type]
+                     (:db/valueType (test-attr schema-type)))]
+      (is (= :db.type/string (val-type Str)))
+      (is (= :db.type/boolean (val-type Bool)))
+      (is (= :db.type/double (val-type Num)))
+      (is (= :db.type/integer (val-type Int)))
+      (is (= :db.type/instant (val-type Inst)))))
+
+  (testing "multi-valued attributes"
+    (let [multi? (fn [attr]
+                   (= :db.cardinality/many (:db/cardinality attr)))]
+      (is (multi? ((db/attribute :yolo [Str]) 42))))))
