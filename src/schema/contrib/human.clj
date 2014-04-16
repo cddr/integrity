@@ -3,7 +3,7 @@
 ;; information to generate one. This library parses the return value of an invocation
 ;; of `check` and generates human readable error messages
 
-(ns schema.contrib.human
+(ns integrity.human
   (:require [schema.core :as s]
             [schema.utils :as utils]
             [taoensso.tower :as tower :refer (t *locale*)]))
@@ -17,7 +17,7 @@ languages can be easily supported"
   {:dev-mode? true
    :fallback-locale :en
    :dictionary
-   {:en {:schema.contrib.human
+   {:en {:integrity.human
          {:it           "it"
           :not-eq       "is not eq with"
           :not-one-of   "is not one of"

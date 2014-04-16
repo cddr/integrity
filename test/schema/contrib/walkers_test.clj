@@ -1,6 +1,6 @@
-(ns schema.contrib.walkers-test
+(ns integrity.walkers-test
   (:require [clojure.test :refer :all]
-            [schema.contrib.walkers :refer [lookup]]
+            [integrity.walkers :refer [lookup]]
             [schema.core :as s :refer [Str]]))
 
 (deftest walkers-resolve-test

@@ -1,4 +1,4 @@
-(ns schema.contrib.walkers
+(ns integrity.walkers
   (:require [schema.core :as s]))
 
 (defn lookup

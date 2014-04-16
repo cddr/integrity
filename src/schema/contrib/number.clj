@@ -1,7 +1,7 @@
-(ns schema.contrib.number
+(ns integrity.number
   (:require [schema.core :as s]
             [schema.utils :as utils]
-            [schema.contrib.human :refer :all]))
+            [integrity.human :refer :all]))
 
 (defn lt
   "Returns a `schema.core` predicate that passes when it's input is less than `high`"

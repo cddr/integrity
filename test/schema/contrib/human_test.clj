@@ -1,8 +1,8 @@
-(ns schema.contrib.human-test
+(ns integrity.human-test
   (:require [clojure.test :refer :all]
             [schema.core :as s :refer [check]]
-            [schema.contrib.number :refer [gt lt between]]
-            [schema.contrib.human :refer [human-explain]]))
+            [integrity.number :refer [gt lt between]]
+            [integrity.human :refer [human-explain]]))
 
 (deftest human-test-unit
   (testing "lt"

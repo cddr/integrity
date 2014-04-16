@@ -1,8 +1,8 @@
-(ns schema.contrib.datomic-test
+(ns integrity.datomic-test
   (:require [clojure.test :refer :all]
             [schema.core :as s :refer [Str Bool Num Int Inst]]
             [datomic.api :as d]
-            [schema.contrib.datomic :as db]
+            [integrity.datomic :as db]
             [clojure.data :as data]))
 
 (deftest datomic-test

@@ -1,4 +1,4 @@
-# schema.contrib
+# integrity
 
 ![The Schema Toolbox](resources/icon.png)
 
@@ -9,7 +9,7 @@ useful to a large part of the community.
 
 ## Status
 
- * ![Build Status](https://travis-ci.org/cddr/schema.contrib.svg)
+ * ![Build Status](https://travis-ci.org/cddr/integrity.svg)
 
 ## Usage
 
@@ -17,10 +17,10 @@ Add the latest version into your dependencies
 
 ```
 (defproject
-  :dependencies [[cddr/schema.contrib "0.2.0"]])
+  :dependencies [[cddr/integrity "0.2.0"]])
 ```
 
-### schema.contrib.hal
+### integrity.hal
 
 HAL is the [hypertext application language](http://stateless.co/hal_specification.html).
 As the summary at the link above describes, HAL based APIs are easily discoverable by
@@ -28,23 +28,23 @@ client applications. The vars in this namespace may be helpful when generating
 walkers that require knowledge of HAL data-structures. For example usage, see
 the tests
 
-[HAL Tests](https://github.com/cddr/schema.contrib/blob/next/test/schema/contrib/hal_test.clj)
+[HAL Tests](https://github.com/cddr/integrity/blob/next/test/integrity/hal_test.clj)
 
-### schema.contrib.human
+### integrity.human
 
 When some data input is checked against some schema, `prismatic/schema`
 returns a ValidationError object. The `human-explain` function translates
 this error object into a message that should be surfaceable to an end-user.
 For example usage, see the tests
 
-[Human Explain Tests](https://github.com/cddr/schema.contrib/blob/next/test/schema/contrib/hal_test.clj)
+[Human Explain Tests](https://github.com/cddr/integrity/blob/next/test/integrity/hal_test.clj)
 
 When using schema's `pred` type constructor, be sure to give your predicate
 a name which satisfies the function `human-expectation?`. This should ensure
 that the information needed by `ValidationTransformer` to print a human
 readable message is attached to your predicate function.
 
-### schema.contrib.number
+### integrity.number
 
 Schema defines a `pred` utility which builds a schema that matches it's
 input if the supplied predicate returns true. Here, we use this to build
@@ -53,9 +53,9 @@ numeric schemas that can be more specific than just a type of number.
 For example `(gt 21)` builds a schema one could use to ensure the input
 data is old enough to buy booze. For more examples, see the tests
 
-[Number Tests](https://github.com/cddr/schema.contrib/blob/next/test/schema/contrib/number_test.clj)
+[Number Tests](https://github.com/cddr/integrity/blob/next/test/integrity/number_test.clj)
 
-### schema.contrib.walkers
+### integrity.walkers
 
 Schema walker generators take a schema as input, and use it to return a
 function that walks input data in-step with the the corresponding schema. For
@@ -63,7 +63,7 @@ example, the `lookup` walker replaces "references" in the input document
 with the result of looking them up in an external data source. For example
 usage, see the tests
 
-[Walker Tests](https://github.com/cddr/schema.contrib/blob/next/test/schema/contrib/walkers_test.clj)
+[Walker Tests](https://github.com/cddr/integrity/blob/next/test/integrity/walkers_test.clj)
 
 ## Contributing
 

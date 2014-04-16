@@ -1,4 +1,4 @@
-(ns schema.contrib.datomic
+(ns integrity.datomic
   (:require
    [schema.core :as s :refer [Str Num Inst Int Bool]]))
 

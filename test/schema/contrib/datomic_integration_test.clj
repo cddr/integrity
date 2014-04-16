@@ -1,8 +1,8 @@
-(ns schema.contrib.datomic-integration-test
+(ns integrity.datomic-integration-test
   (:require [clojure.test :refer :all]
             [schema.core :as s :refer [Str Num Inst Int]]
             [datomic.api :as d]
-            [schema.contrib.datomic :as db]))
+            [integrity.datomic :as db]))
 
 (def test-db-uri "datomic:mem://schema-test")
 

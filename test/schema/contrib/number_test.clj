@@ -1,8 +1,8 @@
-(ns schema.contrib.number-test
+(ns integrity.number-test
   (:require [clojure.test :refer :all]
             [schema.core :refer [check]]
-            [schema.contrib.number :refer [gt gte lt lte between]]
-            [schema.contrib.human :refer [human-explain]]))
+            [integrity.number :refer [gt gte lt lte between]]
+            [integrity.human :refer [human-explain]]))
 
 (deftest number-test-unit
   (testing "lt"

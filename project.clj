@@ -1,7 +1,6 @@
-(defproject schema.contrib "0.2.0-SNAPSHOT"
-  :description "A collection of namespaces that operate on prismatic/schema
-metadata and functions"
-  :url "https://github.com/cddr/schema.contrib"
+(defproject cddr/integrity "0.2.0-SNAPSHOT"
+  :description "A collection of libraries for maintaining data integrity"
+  :url "https://github.com/cddr/integrity"
   :license {:name "Eclipse Public License"
             :url "http://www.eclipse.org/legal/epl-v10.html"}
   :dependencies [[org.clojure/clojure "1.5.1"]
@@ -13,7 +12,7 @@ metadata and functions"
   :plugins [[codox "0.6.7"]]
   :codox {:writer codox-md.writer/write-docs
           :output-dir "doc/v0.2.0"
-          :src-dir-uri "http://github.com/cddr/schema.contrib/blob/v0.2.0/"}
+          :src-dir-uri "http://github.com/cddr/integrity/blob/v0.2.0/"}
 
 
   :profiles

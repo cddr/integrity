@@ -1,6 +1,6 @@
-(ns schema.contrib.hal-test
+(ns integrity.hal-test
   (:require [clojure.test :refer :all]
-            [schema.contrib.hal :as hal]
+            [integrity.hal :as hal]
             [schema.core :as s :refer [check]]))
 
 (deftest hal-resource-tests

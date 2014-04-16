@@ -1,4 +1,4 @@
-(ns schema.contrib.hal
+(ns integrity.hal
   (:require [schema.core :as s :refer [Str Any Bool Keyword]]))
 
 (def ^{:private true}
