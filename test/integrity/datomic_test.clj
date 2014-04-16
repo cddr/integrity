@@ -3,9 +3,9 @@
             [schema.core :as s :refer [Str Bool Num Int Inst]]
             [datomic.api :as d]
             [integrity.datomic :as db]
-            [clojure.data :as data]))
+            [integrity.test-helpers :refer [attr]]))
 
-(deftest datomic-test
+(deftest test-prismatic->datomic
   (testing "ident is copied from schema"
     (let [test-attr ((db/attribute :yolo Str) 42)]
       (= :foo (:db/ident test-attr))))
@@ -25,3 +25,23 @@
     (let [multi? (fn [attr]
                    (= :db.cardinality/many (:db/cardinality attr)))]
       (is (multi? ((db/attribute :yolo [Str]) 42))))))
+
+
+(deftest test-datomic->prismatic
+  (let [attrs (concat (attr :a :string)
+                      (attr :b :boolean)
+                      (attr :c :float))]
+    (testing "datomic validator"
+      (is (= {(s/optional-key :a) Str
+              (s/optional-key :b) Bool
+              (s/optional-key :c) Float}
+             (db/schema attrs))))
+
+    (testing "datomic validator with required keys"
+      (is (= {:a Str
+              :b Bool
+              (s/optional-key :c) Float}
+             (db/schema attrs #{:a :b}))))))
+
+
+    

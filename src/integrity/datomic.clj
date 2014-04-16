@@ -1,9 +1,12 @@
 (ns integrity.datomic
+  "Maps datomic attribute definitions to prismatic schemata
+and vice versa"
   (:require
-   [schema.core :as s :refer [Str Num Inst Int Bool]]))
+   [schema.core :as s :refer [Str Num Inst Int Bool Keyword]]))
 
 
-(def schema->datomic
+(def ^{:private true}
+  schema->datomic
   {Str                      :db.type/string
    Bool                     :db.type/boolean
    Long                     :db.type/long
@@ -15,8 +18,11 @@
    ;java.Math.BigDecimal     :db.type/bigdec
    })
 
-(defmulti attribute (fn [ident schema]
-                      (class schema)))
+(defmulti attribute
+  "Implementing methods should return a function that will generate a
+datomic attribute when given it's id as the one and only argument"
+  (fn [ident schema]
+    (class schema)))
 
 (defmethod attribute ::leaf [ident schema]
   (fn [id]
@@ -48,3 +54,31 @@
 (derive schema.core.Predicate          ::leaf)
 
 (derive clojure.lang.IPersistentVector ::vector)
+
+
+;; prismatic/schema utils
+
+(def ^{:private true}
+  datomic->schema
+  {:db.type/string           Str
+   :db.type/boolean          Bool
+   :db.type/long             Long
+   :db.type/double           Number
+   :db.type/integer          Int
+   :db.type/float            Float
+   :db.type/instant          Inst
+   :db.type/ref              (s/either Int Keyword)
+   })
+
+(defn schema
+  ([attributes required]
+     (let [build-attr (fn [attr]
+                        (let [ident (:db/ident attr)
+                              type (val (find datomic->schema (:db/valueType attr)))]
+                          (if (contains? required ident)
+                            [ident type]
+                            [(s/optional-key ident) type])))]
+       (let [attrs (filter :db.install/_attribute attributes)]
+         (apply hash-map (mapcat build-attr attrs)))))
+  ([attributes]
+     (schema attributes #{})))
