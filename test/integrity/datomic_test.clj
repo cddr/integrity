@@ -7,12 +7,12 @@
 
 (deftest test-prismatic->datomic
   (testing "ident is copied from schema"
-    (let [test-attr ((db/attribute :yolo Str) 42)]
+    (let [test-attr (db/attribute :yolo Str)]
       (= :foo (:db/ident test-attr))))
 
   (testing "single valued attributes"
     (let [test-attr (fn [attr]
-                      ((db/attribute :yolo attr) 42))
+                      (db/attribute :yolo attr))
           val-type (fn [schema-type]
                      (:db/valueType (test-attr schema-type)))]
       (is (= :db.type/string (val-type Str)))
@@ -24,7 +24,7 @@
   (testing "multi-valued attributes"
     (let [multi? (fn [attr]
                    (= :db.cardinality/many (:db/cardinality attr)))]
-      (is (multi? ((db/attribute :yolo [Str]) 42))))))
+      (is (multi? (db/attribute :yolo [Str]))))))
 
 
 (deftest test-datomic->prismatic
@@ -42,6 +42,3 @@
               :b Bool
               (s/optional-key :c) Float}
              (db/schema attrs #{:a :b}))))))
-
-
-    

@@ -16,9 +16,6 @@
   (let [c (d/connect test-db-uri)]
     (:db-after (d/with (d/db c) transactions))))
 
-(defn id-gen []
-  (d/tempid :db.part/db))
-
 ;; datomic helpers
 
 (defn installed-attrs [db]
@@ -43,5 +40,5 @@
   (testing "can load a generated schema into datomic"
     (= #{:created-at :user :msg}
        (clojure.set/difference
-        (list-attrs (db-with (db/attributes Tweet id-gen)))
+        (list-attrs (db-with (db/attributes Tweet)))
         (list-attrs (db-with nil))))))

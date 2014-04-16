@@ -1,8 +1,8 @@
 (ns integrity.datomic
   "Maps datomic attribute definitions to prismatic schemata
 and vice versa"
-  (:require
-   [schema.core :as s :refer [Str Num Inst Int Bool Keyword]]))
+  (:require [datomic.api :as d]
+            [schema.core :as s :refer [Str Num Inst Int Bool Keyword]]))
 
 
 (def ^{:private true}
@@ -25,25 +25,24 @@ datomic attribute when given it's id as the one and only argument"
     (class schema)))
 
 (defmethod attribute ::leaf [ident schema]
-  (fn [id]
-    {:db/id id
-     :db/ident ident
-     :db/valueType ((comp val find) schema->datomic schema)
-     :db/cardinality :db.cardinality/one
-     :db.install/_attribute :db.part/db}))
+  {:db/id (d/tempid :db.part/db)
+   :db/ident ident
+   :db/valueType ((comp val find) schema->datomic schema)
+   :db/cardinality :db.cardinality/one
+   :db.install/_attribute :db.part/db})
 
 (defmethod attribute ::vector [ident schema]
-  (fn [id]
-    {:db/id id
-     :db/ident ident
-     :db/valueType ((comp val find) schema->datomic (first schema))
-     :db/cardinality :db.cardinality/many
-     :db.install/_attribute :db.part/db}))
+  {:db/id (d/tempid :db.part/db)
+   :db/ident ident
+   :db/valueType ((comp val find) schema->datomic (first schema))
+   :db/cardinality :db.cardinality/many
+   :db.install/_attribute :db.part/db})
 
-(defn attributes [schema id-fn]
+(defn attributes [schema]
+  "Given a prismatic schema, returns a list of datomic attributes"
   (let [mk-attr (fn [acc entry]
                   (conj acc
-                        ((attribute (key entry) (val entry)) (id-fn))))]
+                        (attribute (key entry) (val entry))))]
     (reduce mk-attr [] schema)))
 
 (derive java.lang.Class                ::leaf)
