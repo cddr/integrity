@@ -28,7 +28,7 @@ client applications. The vars in this namespace may be helpful when generating
 walkers that require knowledge of HAL data-structures. For example usage, see
 the tests
 
-[HAL Tests](https://github.com/cddr/integrity/blob/next/test/integrity/hal_test.clj)
+[HAL Tests](https://github.com/cddr/integrity/blob/master/test/integrity/hal_test.clj)
 
 ### integrity.human
 
@@ -37,7 +37,7 @@ returns a ValidationError object. The `human-explain` function translates
 this error object into a message that should be surfaceable to an end-user.
 For example usage, see the tests
 
-[Human Explain Tests](https://github.com/cddr/integrity/blob/next/test/integrity/hal_test.clj)
+[Human Explain Tests](https://github.com/cddr/integrity/blob/master/test/integrity/human_test.clj)
 
 When using schema's `pred` type constructor, be sure to give your predicate
 a name which satisfies the function `human-expectation?`. This should ensure
@@ -53,7 +53,7 @@ numeric schemas that can be more specific than just a type of number.
 For example `(gt 21)` builds a schema one could use to ensure the input
 data is old enough to buy booze. For more examples, see the tests
 
-[Number Tests](https://github.com/cddr/integrity/blob/next/test/integrity/number_test.clj)
+[Number Tests](https://github.com/cddr/integrity/blob/master/test/integrity/number_test.clj)
 
 ### integrity.walkers
 
@@ -63,7 +63,7 @@ example, the `lookup` walker replaces "references" in the input document
 with the result of looking them up in an external data source. For example
 usage, see the tests
 
-[Walker Tests](https://github.com/cddr/integrity/blob/next/test/integrity/walkers_test.clj)
+[Walker Tests](https://github.com/cddr/integrity/blob/master/test/integrity/walkers_test.clj)
 
 ## Contributing
 
