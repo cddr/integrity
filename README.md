@@ -17,7 +17,7 @@ Add the latest version into your dependencies
 
 ```
 (defproject
-  :dependencies [[cddr/integrity "0.2.0"]])
+  :dependencies [[cddr/integrity "0.2.0-SNAPSHOT"]])
 ```
 
 ### integrity.hal
