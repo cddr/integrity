@@ -45,7 +45,7 @@ been displayed already, the 'third-person singular pronoun'"
 of that value"
  [v]
   (if (symbol? v)
-    (str (name v))
+    (clojure.string/replace (str (name v)) "?" "")
     v))
 
 (defn- error [check-result]
@@ -70,10 +70,6 @@ TODO: refactor to avoid ['control coupling'](http://robots.thoughtbot.com/types-
                   (print (show-val e parent) (tval ::not-eq)
                          (second (:expectation e)))))})
 
-(defn- human-expectation? [expectation]
-  (and (list? expectation)
-       (symbol? (first (first expectation)))))
-
 (extend schema.core.EnumSchema
   ValidationTranslator
   {:translate (fn [schema error parent]
@@ -81,19 +77,20 @@ TODO: refactor to avoid ['control coupling'](http://robots.thoughtbot.com/types-
                   (print (show-val error parent) (tval ::not-one-of) "")
                   (print (.vs (:schema error)))))})
 
+(defn- pred-expectation [expectation]
+  (let [[pred val] expectation]
+    (cond
+     (symbol? pred) (list (humanize pred))
+     (seq pred) (let [[op & args] pred]
+                  (conj (interpose (tval ::and) (map humanize args))
+                        (humanize op))))))
+
 (extend schema.core.Predicate
   ValidationTranslator
   {:translate (fn [schema error parent]
                 (with-out-str
                   (print (show-val error parent) (tval ::is-not) "")
-                  (apply print (cond
-                                (human-expectation? (:expectation error))
-                                (let [[op & args] (first (:expectation error))]
-                                  (conj (interpose (tval ::and) (map humanize args))
-                                       (humanize op)))
-
-                                true
-                                (:expectation error)))))})
+                  (apply print (pred-expectation (:expectation error)))))})
 
 (extend schema.core.Either
  ValidationTranslator

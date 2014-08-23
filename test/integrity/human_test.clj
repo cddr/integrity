@@ -5,6 +5,14 @@
             [integrity.human :refer [human-explain]]))
 
 (deftest human-test-unit
+  (testing "Int"
+    (is (= "yolo is not integer"
+           (human-explain (check s/Int "yolo")))))
+
+  (testing "Keyword"
+    (is (= "yolo is not keyword"
+           (human-explain (check s/Keyword "yolo")))))
+
   (testing "lt"
     (is (= "42 is not a java.lang.String"
            (human-explain (check s/Str 42)))))
