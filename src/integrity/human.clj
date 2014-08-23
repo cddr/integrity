@@ -6,7 +6,8 @@
 (ns integrity.human
   (:require [schema.core :as s]
             [schema.utils :as utils]
-            [taoensso.tower :as tower :refer (t *locale*)]))
+            [taoensso.tower :as tower :refer (t *locale*)])
+  (:import (schema.utils ValidationError)))
 
 ;; ### Support for internationalization
 
@@ -116,7 +117,14 @@ TODO: refactor to avoid ['control coupling'](http://robots.thoughtbot.com/types-
                   (print (show-val error parent) (tval ::is-not-a) (:schema error))))})
 
 (defn human-explain [check-result]
-  (when check-result
-    (let [error (error check-result)]
-      (binding [*locale* (or *locale* :en)]
-        (translate (:schema error) error nil)))))
+  (cond
+   (nil? check-result) nil
+
+   (instance? ValidationError check-result)
+   (let [error (error check-result)]
+     (binding [*locale* (or *locale* :en)]
+       (translate (:schema error) error nil)))
+
+   (map? check-result) (into {} (for [[k v] check-result]
+                                  [k (human-explain v)]))))
+

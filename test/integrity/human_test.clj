@@ -30,4 +30,13 @@
 "
            (human-explain (check (s/either s/Str
                                            (gt 42))
-                                 1))))))
+                                 1)))))
+
+  (testing "nested"
+    (is (= {:name "42 is not a java.lang.String"}
+           (human-explain (check {:name s/Str} {:name 42}))))
+    (is (= {:name "42 is not a java.lang.String"
+            :age "yolo is not integer"}
+           (human-explain (check {:name s/Str
+                                  :age s/Int}
+                                 {:name 42 :age "yolo"}))))))
