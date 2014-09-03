@@ -1,4 +1,4 @@
-(defproject cddr/integrity "0.2.0-SNAPSHOT"
+(defproject cddr/integrity "0.3.0-SNAPSHOT"
   :description "A collection of libraries for maintaining data integrity"
   :url "https://github.com/cddr/integrity"
   :license {:name "Eclipse Public License"
@@ -11,7 +11,7 @@
                  [codox-md "0.2.0"]]
   :plugins [[codox "0.6.7"]]
   :codox {:writer codox-md.writer/write-docs
-          :output-dir "doc/v0.2.0"
+          :output-dir "doc/v0.3.0"
           :src-dir-uri "http://github.com/cddr/integrity/blob/master/"}
 
 
