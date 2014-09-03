@@ -6,7 +6,7 @@
 (ns integrity.human
   (:require [schema.core :as s]
             [schema.utils :as utils]
-            [taoensso.tower :as tower :refer (t *locale*)])
+            [taoensso.tower :as tower :refer [*locale*]])
   (:import (schema.utils ValidationError)))
 
 ;; ### Support for internationalization
@@ -22,24 +22,16 @@ languages can be easily supported"
          {:it           "it"
           :not-eq       "is not eq with"
           :not-one-of   "is not one of"
+          :is           "is"
           :is-not       "is not"
           :and          "and"
           :fails-all    "fails all of the following:-"
           :is-not-a     "is not a"}}}})
 
-(defn- tval
-  "`tval` returns the translation for the specified language independent key"
-  [key]
-  (t *locale* dictionary key))
+(defn- tval [k]
+  (tower/t (or *locale* :en) dictionary k))
 
-(defn- show-val
-  "`show-val` returns the failing input value, or if that value has
-been displayed already, the 'third-person singular pronoun'"
- [err parent]
-  (if (nil? parent)
-    (:value err)
-    (tval ::it)))
-
+;; Helpers
 (defn- humanize
   "`humanize` takes a value and returns a human readable representation
 of that value"
@@ -48,80 +40,79 @@ of that value"
     (clojure.string/replace (str (name v)) "?" "")
     v))
 
-(defn- error [check-result]
-  {:explain (utils/.-fail-explanation check-result)
-   :schema (utils/.-schema check-result)
-   :value (utils/.-value check-result)
-   :expectation @(utils/.-expectation-delay check-result)
-   :fail-explanation (utils/.-fail-explanation check-result)})
+(defprotocol HumanExplain
+  (human-explain [schema error] "Explain an error related to this schema"))
 
-(defprotocol ValidationTranslator
-  "A `ValidationTranslator` knows how to translate a `schema.util.ValidationError`
-into a message intended for an end-user"
-  (translate [schema error parent]
-    "Uses `schema` to help translates the `error` into an end-user error message
+(defn human-walker
+  [input-schema]
+  (s/start-walker
+   (fn [s]
+     (let [walk (s/walker s)]
+       (fn [x]
+         (let [result (walk x)]
+           (human-explain s result)))))
+   input-schema))
 
-TODO: refactor to avoid ['control coupling'](http://robots.thoughtbot.com/types-of-coupling)"))
+(extend-protocol HumanExplain
+  java.lang.Class
+  (human-explain [schema result]
+    (if (utils/error? result)
+      (with-out-str
+        (print (.-value (utils/error-val result))
+               (tval ::is-not-a)
+               schema)))))
 
-(extend schema.core.EqSchema
-  ValidationTranslator
-  {:translate (fn [schema e parent]
-                (with-out-str
-                  (print (show-val e parent) (tval ::not-eq)
-                         (second (:expectation e)))))})
+(extend-protocol HumanExplain
+  schema.core.Predicate
+  (human-explain [schema result]
+    (if (utils/error? result)
+      (let [err (utils/error-val result)
+            [pred val] @(.-expectation-delay err)]
+        (with-out-str
+          (print (.-value err) (tval ::is) (or (.-fail-explanation err) 'not)
+                 (let [name (.-pred-name schema)]
+                   (cond
+                    (symbol? name) (humanize name)
+                    (seq name) (str (humanize (first name))
+                                    " "
+                                    (apply str
+                                           (interpose (str " " (tval ::and) " ")
+                                                      (map humanize (rest name)))))))))))))
 
-(extend schema.core.EnumSchema
-  ValidationTranslator
-  {:translate (fn [schema error parent]
-                (with-out-str
-                  (print (show-val error parent) (tval ::not-one-of) "")
-                  (print (.vs (:schema error)))))})
+(extend-protocol HumanExplain
+  schema.core.EqSchema
+  (human-explain [schema result]
+    (if (utils/error? result)
+      (let [err (utils/error-val result)]
+        (with-out-str
+          (print (.-value err) (tval ::not-eq) (.-v schema)))))))
 
-(defn- pred-expectation [expectation]
-  (let [[pred val] expectation]
-    (cond
-     (symbol? pred) (list (humanize pred))
-     (seq pred) (let [[op & args] pred]
-                  (conj (interpose (tval ::and) (map humanize args))
-                        (humanize op))))))
+(extend-protocol HumanExplain
+  schema.core.EnumSchema
+  (human-explain [schema result]
+    (if (utils/error? result)
+      (let [err (utils/error-val result)]
+        (with-out-str
+          (print (.-value err) (tval ::not-one-of)
+                 (.-vs schema)))))))
 
-(extend schema.core.Predicate
-  ValidationTranslator
-  {:translate (fn [schema error parent]
-                (with-out-str
-                  (print (show-val error parent) (tval ::is-not) "")
-                  (apply print (pred-expectation (:expectation error)))))})
+(extend-protocol HumanExplain
+  schema.core.MapEntry
+  (human-explain [schema result]
+    (if-let [err (second result)]
+      {(first result) err})))
 
-(extend schema.core.Either
- ValidationTranslator
- {:translate (fn [schema e p]
-               (with-out-str
-                 (println (show-val e p) (tval ::fails-all))
-                 (doseq [exp (map (fn [sub-schema]
-                                    (let [val (:value e)
-                                          check-result (s/check sub-schema val)]
-                                      (if check-result
-                                        (translate (:schema (error check-result))
-                                                   (error check-result)
-                                                   e))))
-                                  (.-schemas schema))]
-                   (println " " exp))))})
+(extend-protocol HumanExplain
+  clojure.lang.PersistentArrayMap
+  (human-explain [schema result]
+    (let [m (into {} (map (fn [[schema-key schema-val] res]
+                            (human-explain (s/map-entry schema-key schema-val) res))
+                          schema result))]
+      (if (empty? m)
+        nil
+        m))))
 
-(extend java.lang.Class
-  ValidationTranslator
-  {:translate (fn [schema error parent]
-                (with-out-str
-                  (print (show-val error parent) (tval ::is-not-a) (:schema error))))})
-
-(defn human-explain [check-result]
-  (cond
-   (nil? check-result) nil
-
-   (instance? ValidationError check-result)
-   (let [error (error check-result)]
-     (binding [*locale* (or *locale* :en)]
-       (translate (:schema error) error nil)))
-
-   (map? check-result) (into {} (for [[k v] check-result]
-                                  [k (human-explain v)]))))
-
+(extend-protocol HumanExplain
+  schema.core.Either
+  (human-explain [schema result]
+    result))
