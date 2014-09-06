@@ -5,6 +5,23 @@
             [integrity.datomic :as db]
             [integrity.test-helpers :refer [attr]]))
 
+(deftest test-leaves
+  (let [attr (fn [type]
+               (db/attribute :yolo type))]
+    (are [expected actual] (= expected actual)
+         :db.type/string (:db/valueType (attr Str))
+         :db.type/boolean (:db/valueType (attr Bool))
+         :db.type/double (:db/valueType (attr Num))
+         :db.type/integer (:db/valueType (attr Int))
+         :db.type/instant (:db/valueType (attr Inst)))))
+
+(deftest test-maps
+  (let [map-schema {:name Str
+                    :address Str}]
+    (is (= [(db/attribute :name Str)
+            (db/attribute :address Str)]
+           (db/attributes map-schema)))))
+
 (deftest test-prismatic->datomic
   (testing "ident is copied from schema"
     (let [test-attr (db/attribute :yolo Str)]
