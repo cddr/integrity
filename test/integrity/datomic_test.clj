@@ -5,6 +5,8 @@
             [integrity.datomic :as db]
             [integrity.test-helpers :refer [attr]]))
 
+(def remove-ids (fn [v] (map #(dissoc % :db/id) v)))
+
 (deftest test-leaves
   (let [attr (fn [type]
                (db/attribute :yolo type))]
@@ -13,49 +15,26 @@
          :db.type/boolean (:db/valueType (attr Bool))
          :db.type/double (:db/valueType (attr Num))
          :db.type/integer (:db/valueType (attr Int))
-         :db.type/instant (:db/valueType (attr Inst)))))
+         :db.type/instant (:db/valueType (attr Inst))
+         :db.type/ref (:db/valueType ((:attr-factory db/Ref) :yolo)))
+    (let [many-ints (attr [Int])]
+      (is (= :db.type/integer (:db/valueType many-ints)))
+      (is (= :db.cardinality/many (:db/cardinality many-ints))))))
 
-(deftest test-maps
+(deftest test-simple-map
   (let [map-schema {:name Str
                     :address Str}]
-    (is (= [(db/attribute :name Str)
-            (db/attribute :address Str)]
-           (db/attributes map-schema)))))
+    (is (= (set (remove-ids [(db/attribute :name Str)
+                             (db/attribute :address Str)]))
+           (set (remove-ids (db/attributes map-schema)))))))
 
-(deftest test-prismatic->datomic
-  (testing "ident is copied from schema"
-    (let [test-attr (db/attribute :yolo Str)]
-      (= :foo (:db/ident test-attr))))
+(deftest test-nested-map
+  (let [schema {:name Str
+                :address {:street Str
+                          :city Str}}]
+    (is (= (set (remove-ids [(db/attribute :name Str)
+                             (db/attribute :street Str)
+                             (db/attribute :city Str)
+                             ((:attr-factory db/Ref) :address)]))
+           (set (remove-ids (db/attributes schema)))))))
 
-  (testing "single valued attributes"
-    (let [test-attr (fn [attr]
-                      (db/attribute :yolo attr))
-          val-type (fn [schema-type]
-                     (:db/valueType (test-attr schema-type)))]
-      (is (= :db.type/string (val-type Str)))
-      (is (= :db.type/boolean (val-type Bool)))
-      (is (= :db.type/double (val-type Num)))
-      (is (= :db.type/integer (val-type Int)))
-      (is (= :db.type/instant (val-type Inst)))))
-
-  (testing "multi-valued attributes"
-    (let [multi? (fn [attr]
-                   (= :db.cardinality/many (:db/cardinality attr)))]
-      (is (multi? (db/attribute :yolo [Str]))))))
-
-
-(deftest test-datomic->prismatic
-  (let [attrs (concat (attr :a :string)
-                      (attr :b :boolean)
-                      (attr :c :float))]
-    (testing "datomic validator"
-      (is (= {(s/optional-key :a) Str
-              (s/optional-key :b) Bool
-              (s/optional-key :c) Float}
-             (db/schema attrs))))
-
-    (testing "datomic validator with required keys"
-      (is (= {:a Str
-              :b Bool
-              (s/optional-key :c) Float}
-             (db/schema attrs #{:a :b}))))))

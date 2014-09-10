@@ -20,6 +20,13 @@ Add the latest version into your dependencies
   :dependencies [[cddr/integrity "0.2.0-SNAPSHOT"]])
 ```
 
+### integrity.datomic
+
+The `attributes` function generates datomic attribute definitions to match the specified
+schema
+
+[Datomic Tests](https://github.com/cddr/integrity/blob/master/test/integrity/datomic_test.clj)
+
 ### integrity.hal
 
 HAL is the [hypertext application language](http://stateless.co/hal_specification.html).

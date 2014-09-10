@@ -2,8 +2,16 @@
   "Maps datomic attribute definitions to prismatic schemata
 and vice versa"
   (:require [datomic.api :as d]
-            [schema.core :as s :refer [Str Num Inst Int Bool Keyword]]))
+            [schema.core :as s :refer [Str Num Inst Int Bool Keyword]]
+            [clojure.walk :as w]))
 
+(def Ref {:schema (s/either Int Keyword)
+          :attr-factory (fn [ident]
+                          {:db/id (d/tempid :db.part/db)
+                           :db/ident ident
+                           :db/valueType :db.type/ref
+                           :db/cardinality :db.cardinality/one
+                           :db.install/_attribute :db.part/db})})
 
 (def ^{:private true}
   schema->datomic
@@ -40,10 +48,15 @@ datomic attribute when given it's id as the one and only argument"
 
 (defn attributes [schema]
   "Given a prismatic schema, returns a list of datomic attributes"
-  (let [mk-attr (fn [acc entry]
-                  (conj acc
-                        (attribute (key entry) (val entry))))]
-    (reduce mk-attr [] schema)))
+  (let [mk-attr (fn [k v]
+                  (attribute k v))]
+    (reduce (fn [acc [k v]]
+              (if (map? v)
+                (into acc (conj (attributes (into {} v))
+                                ((:attr-factory Ref) k)))
+                (into acc [(mk-attr k v)])))
+            []
+            (seq schema))))
 
 (derive java.lang.Class                ::leaf)
 
@@ -54,30 +67,3 @@ datomic attribute when given it's id as the one and only argument"
 
 (derive clojure.lang.IPersistentVector ::vector)
 
-
-;; prismatic/schema utils
-
-(def ^{:private true}
-  datomic->schema
-  {:db.type/string           Str
-   :db.type/boolean          Bool
-   :db.type/long             Long
-   :db.type/double           Number
-   :db.type/integer          Int
-   :db.type/float            Float
-   :db.type/instant          Inst
-   :db.type/ref              (s/either Int Keyword)
-   })
-
-(defn schema
-  ([attributes required]
-     (let [build-attr (fn [attr]
-                        (let [ident (:db/ident attr)
-                              type (val (find datomic->schema (:db/valueType attr)))]
-                          (if (contains? required ident)
-                            [ident type]
-                            [(s/optional-key ident) type])))]
-       (let [attrs (filter :db.install/_attribute attributes)]
-         (apply hash-map (mapcat build-attr attrs)))))
-  ([attributes]
-     (schema attributes #{})))
