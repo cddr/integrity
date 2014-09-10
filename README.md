@@ -17,7 +17,7 @@ Add the latest version into your dependencies
 
 ```
 (defproject
-  :dependencies [[cddr/integrity "0.2.0-SNAPSHOT"]])
+  :dependencies [[cddr/integrity "0.3.0-SNAPSHOT"]])
 ```
 
 ### integrity.datomic
