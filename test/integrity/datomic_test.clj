@@ -9,7 +9,7 @@
 
 (deftest test-leaves
   (let [attr (fn [type]
-               (db/attribute :yolo type))]
+               (db/attribute :yolo type false))]
     (are [expected actual] (= expected actual)
          :db.type/string (:db/valueType (attr Str))
          :db.type/boolean (:db/valueType (attr Bool))

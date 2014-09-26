@@ -29,22 +29,31 @@ and vice versa"
 (defmulti attribute
   "Implementing methods should return a function that will generate a
 datomic attribute when given it's id as the one and only argument"
-  (fn [ident schema]
-    (class schema)))
+  (fn dispatch
+    ([ident schema]
+       (dispatch ident schema false))
+    ([ident schema unique]
+       (class schema))))
 
-(defmethod attribute ::leaf [ident schema]
-  {:db/id (d/tempid :db.part/db)
-   :db/ident ident
-   :db/valueType ((comp val find) schema->datomic schema)
-   :db/cardinality :db.cardinality/one
-   :db.install/_attribute :db.part/db})
+(defmethod attribute ::leaf
+  ([ident schema]
+     (attribute ident schema false))
+  ([ident schema unique]
+     {:db/id (d/tempid :db.part/db)
+      :db/ident ident
+      :db/valueType ((comp val find) schema->datomic schema)
+      :db/cardinality :db.cardinality/one
+      :db.install/_attribute :db.part/db}))
 
-(defmethod attribute ::vector [ident schema]
-  {:db/id (d/tempid :db.part/db)
-   :db/ident ident
-   :db/valueType ((comp val find) schema->datomic (first schema))
-   :db/cardinality :db.cardinality/many
-   :db.install/_attribute :db.part/db})
+(defmethod attribute ::vector
+  ([ident schema]
+     (attribute ident schema false))
+  ([ident schema unique]
+     {:db/id (d/tempid :db.part/db)
+      :db/ident ident
+      :db/valueType ((comp val find) schema->datomic (first schema))
+      :db/cardinality :db.cardinality/many
+      :db.install/_attribute :db.part/db}))
 
 (defn attributes [schema]
   "Given a prismatic schema, returns a list of datomic attributes"
