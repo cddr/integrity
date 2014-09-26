@@ -38,7 +38,7 @@
 
 (deftest schema-test
   (testing "can load a generated schema into datomic"
-    (= #{:created-at :user :msg}
-       (clojure.set/difference
-        (list-attrs (db-with (db/attributes Tweet {})))
-        (list-attrs (db-with nil))))))
+    (let [test-db (db-with (db/attributes Tweet {}))]
+      (is (d/attribute test-db :created-at))
+      (is (d/attribute test-db :user))
+      (is (d/attribute test-db :msg)))))
