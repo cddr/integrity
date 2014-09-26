@@ -8,25 +8,34 @@
 (def remove-ids (fn [v] (map #(dissoc % :db/id) v)))
 
 (deftest test-leaves
-  (let [attr (fn [type]
-               (db/attribute :yolo type false))]
+  (let [gen-attr (fn
+                   ([type]
+                      (db/attribute :yolo type))
+                   ([type unique]
+                      (db/attribute :yolo type unique)))]
     (are [expected actual] (= expected actual)
-         :db.type/string (:db/valueType (attr Str))
-         :db.type/boolean (:db/valueType (attr Bool))
-         :db.type/double (:db/valueType (attr Num))
-         :db.type/integer (:db/valueType (attr Int))
-         :db.type/instant (:db/valueType (attr Inst))
+         :db.type/string (:db/valueType (gen-attr Str))
+         :db.type/boolean (:db/valueType (gen-attr Bool))
+         :db.type/double (:db/valueType (gen-attr Num))
+         :db.type/integer (:db/valueType (gen-attr Int))
+         :db.type/instant (:db/valueType (gen-attr Inst))
          :db.type/ref (:db/valueType ((:attr-factory db/Ref) :yolo)))
-    (let [many-ints (attr [Int])]
+    (let [many-ints (gen-attr [Int])]
       (is (= :db.type/integer (:db/valueType many-ints)))
-      (is (= :db.cardinality/many (:db/cardinality many-ints))))))
+      (is (= :db.cardinality/many (:db/cardinality many-ints))))
+
+    (is (= :db.unique/identity (:db/unique (gen-attr Str :db.unique/identity))))
+    (is (= :db.unique/value (:db/unique (gen-attr Str :db.unique/value))))
+    (is (thrown-with-msg? Exception #"attributes with cardinality of many cannot be unique"
+                          (gen-attr [Str] :db.unique/identity)))))
 
 (deftest test-simple-map
   (let [map-schema {:name Str
-                    :address Str}]
-    (is (= (set (remove-ids [(db/attribute :name Str)
+                    :address Str}
+        uniqueness {:name :db.unique/identity}]
+    (is (= (set (remove-ids [(db/attribute :name Str :db.unique/identity)
                              (db/attribute :address Str)]))
-           (set (remove-ids (db/attributes map-schema)))))))
+           (set (remove-ids (db/attributes map-schema uniqueness)))))))
 
 (deftest test-nested-map
   (let [schema {:name Str

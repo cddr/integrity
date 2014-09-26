@@ -39,33 +39,39 @@ datomic attribute when given it's id as the one and only argument"
   ([ident schema]
      (attribute ident schema false))
   ([ident schema unique]
-     {:db/id (d/tempid :db.part/db)
-      :db/ident ident
-      :db/valueType ((comp val find) schema->datomic schema)
-      :db/cardinality :db.cardinality/one
-      :db.install/_attribute :db.part/db}))
+     (let [uniqueness (if unique {:db/unique unique} {})]
+       (merge uniqueness
+              {:db/id (d/tempid :db.part/db)
+               :db/ident ident
+               :db/valueType ((comp val find) schema->datomic schema)
+               :db/cardinality :db.cardinality/one
+               :db.install/_attribute :db.part/db}))))
 
 (defmethod attribute ::vector
   ([ident schema]
      (attribute ident schema false))
   ([ident schema unique]
-     {:db/id (d/tempid :db.part/db)
-      :db/ident ident
-      :db/valueType ((comp val find) schema->datomic (first schema))
-      :db/cardinality :db.cardinality/many
-      :db.install/_attribute :db.part/db}))
+     (if unique
+       (throw (Exception. "attributes with cardinality of many cannot be unique"))
+       {:db/id (d/tempid :db.part/db)
+        :db/ident ident
+        :db/valueType ((comp val find) schema->datomic (first schema))
+        :db/cardinality :db.cardinality/many
+        :db.install/_attribute :db.part/db})))
 
-(defn attributes [schema]
-  "Given a prismatic schema, returns a list of datomic attributes"
-  (let [mk-attr (fn [k v]
-                  (attribute k v))]
-    (reduce (fn [acc [k v]]
-              (if (map? v)
-                (into acc (conj (attributes (into {} v))
-                                ((:attr-factory Ref) k)))
-                (into acc [(mk-attr k v)])))
-            []
-            (seq schema))))
+(defn attributes
+  ([schema]
+     (attributes schema {}))
+  ([schema uniqueness]
+     (let [mk-attr (fn [k v]
+                     (attribute k v (k uniqueness)))]
+       (reduce (fn [acc [k v]]
+                 (if (map? v)
+                   (into acc (conj (attributes (into {} v) uniqueness)
+                                   ((:attr-factory Ref) k)))
+                   (into acc [(mk-attr k v)])))
+               []
+               (seq schema)))))
 
 (derive java.lang.Class                ::leaf)
 
@@ -75,4 +81,3 @@ datomic attribute when given it's id as the one and only argument"
 (derive schema.core.Predicate          ::leaf)
 
 (derive clojure.lang.IPersistentVector ::vector)
-
