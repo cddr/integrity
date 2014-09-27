@@ -16,4 +16,3 @@ corresponding section of `input-schema` for equality with `reference-type`"
                   (lookup-ref data)
                   (walk data)))))]
     (s/start-walker walk-fn input-schema)))
-

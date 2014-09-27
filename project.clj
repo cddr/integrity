@@ -16,5 +16,5 @@
 
 
   :profiles
-  {:test {:dependencies [[com.datomic/datomic-free "0.9.4707"]]}
-   :dev {:dependencies [[com.datomic/datomic-free "0.9.4707"]]}})
+  {:test {:dependencies [[com.datomic/datomic-free "0.9.4899"]]}
+   :dev {:dependencies [[com.datomic/datomic-free "0.9.4899"]]}})

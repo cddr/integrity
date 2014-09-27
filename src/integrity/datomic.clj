@@ -20,7 +20,7 @@ and vice versa"
    Long                     :db.type/long
    ;java.Math.BigInteger     :db.type/bigint
    Num                      :db.type/double
-   Int                      :db.type/integer
+   Int                      :db.type/long
    Float                    :db.type/float
    Inst                     :db.type/instant
    ;java.Math.BigDecimal     :db.type/bigdec
@@ -66,10 +66,10 @@ datomic attribute when given it's id as the one and only argument"
      (let [mk-attr (fn [k v]
                      (attribute k v (k uniqueness)))]
        (reduce (fn [acc [k v]]
-                 (if (map? v)
+                 (if (extends? schema.core/Schema (class v))
+                   (into acc [(mk-attr k v)])
                    (into acc (conj (attributes (into {} v) uniqueness)
-                                   ((:attr-factory Ref) k)))
-                   (into acc [(mk-attr k v)])))
+                                   ((:attr-factory Ref) k)))))
                []
                (seq schema)))))
 
