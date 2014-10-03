@@ -60,6 +60,25 @@ datomic attribute when given it's id as the one and only argument"
         :db.install/_attribute :db.part/db})))
 
 (defn attributes
+  "Recursively generates facts for each key of the input schema
+
+Schema should be a map. Its keys should be attribute names and
+its values should be either Schema \"leaf\" values like Str, Bool,
+Num etc, or another schema. In addition to generating datomic
+attributes for the nested schema, we also generate a datomic
+reference attribute that allows the structures to be linked in
+datomic. Documentation on writing schemas can be found at
+
+https://github.com/Prismatic/schema
+
+If uniqueness is specified, it should be a hash where each key means
+the attribute with that name is marked as unique in datomic. The
+value can be used to determine the type of uniqueness. For details
+about the different types of uniqueness, refer to the datomic
+documentation which can be found at
+
+http://docs.datomic.com/identity.html
+"
   ([schema]
      (attributes schema {}))
   ([schema uniqueness]
