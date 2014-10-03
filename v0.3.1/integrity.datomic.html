@@ -1,0 +1,84 @@
+<html lang="en">
+  <head>
+    <title>integrity.datomic documentation</title>
+    <link href="css/default.css" type="text/css" rel="stylesheet" />
+    <link href="css/codox-md.css" type="text/css" rel="stylesheet" />
+    <script type="text/javascript" src="js/jquery.min.js"></script>
+    <script type="text/javascript" src="js/page_effects.js"></script>
+  </head>
+  <body>
+    <header>
+      <div id="header">
+        <h1 class="project-title">Integrity 0.3.1-SNAPSHOT API documentation</h1>
+      </div>
+    </header>
+    <navigation>
+      <div id="namespaces" class="sidebar">
+        <h3>Namespaces</h3>
+        <ul class="ns-links">
+          <li class="ns-list"><a class="ns-link ns-name" href="integrity.datomic.html">integrity.datomic</a></li><li class="ns-list"><a class="ns-link ns-name" href="integrity.hal.html">integrity.hal</a></li><li class="ns-list"><a class="ns-link ns-name" href="integrity.human.html">integrity.human</a></li><li class="ns-list"><a class="ns-link ns-name" href="integrity.number.html">integrity.number</a></li><li class="ns-list"><a class="ns-link ns-name" href="integrity.walkers.html">integrity.walkers</a></li>
+        </ul>
+      </div>
+      <div id="vars" class="sidebar">
+        <h3>Public Vars</h3>
+        <ul class="ns-var-links">
+          <li class="ns-var-list"><a class="ns-var-link ns-var-name" href="integrity.datomic.html#var-Ref">Ref</a></li><li class="ns-var-list"><a class="ns-var-link ns-var-name" href="integrity.datomic.html#var-attribute">attribute</a></li><li class="ns-var-list"><a class="ns-var-link ns-var-name" href="integrity.datomic.html#var-attributes">attributes</a></li>
+        </ul>
+      </div>
+    </navigation>
+    <article>
+      <div id="content" class="namespace-docs">
+        <h2 class="namespace-title">integrity.datomic documentation</h2>
+        <div class="doc"><p>Maps datomic attribute definitions to prismatic schemata and vice
+versa</p>
+</div>
+        <div class="ns-vars">
+          <div class="public">
+            <h3><a id="var-Ref" class="source var-name" href="http://github.com/cddr/integrity/blob/master/src/integrity/datomic.clj">Ref</a></h3>
+            <h4 class="var-type var" id="var-type">var</h4>
+            
+            
+            
+            <div class="doc">
+</div>
+          </div><div class="public">
+            <h3><a id="var-attribute" class="source var-name" href="http://github.com/cddr/integrity/blob/master/src/integrity/datomic.clj">attribute</a></h3>
+            <h4 class="var-type var" id="var-type">var</h4>
+            
+            
+            
+            <div class="doc"><p>Implementing methods should return a function that will generate a
+datomic attribute when given it's id as the one and only argument</p>
+</div>
+          </div><div class="public">
+            <h3><a id="var-attributes" class="source var-name" href="http://github.com/cddr/integrity/blob/master/src/integrity/datomic.clj">attributes</a></h3>
+            <h4 class="var-type fn" id="var-type">fn</h4>
+            <div class="usage">[schema]</div><div class="usage">[schema uniqueness]</div>
+            
+            
+            <div class="doc"><p>Recursively generates facts for each key of the input schema</p>
+
+<p>Schema should be a map. Its keys should be attribute names and its
+  values should be either Schema "leaf" values like Str, Bool, Num
+  etc, or another schema. In addition to generating datomic attributes
+  for the nested schema, we also generate a datomic reference
+  attribute that allows the structures to be linked in
+  datomic. Documentation on writing schemas can be found at</p>
+
+<p>https://github.com/Prismatic/schema</p>
+
+<p>If uniqueness is specified, it should be a hash where each key means
+  the attribute with that name is marked as unique in datomic. The
+  value can be used to determine the type of uniqueness. For details
+  about the different types of uniqueness, refer to the datomic
+  documentation which can be found at</p>
+
+<p>http://docs.datomic.com/identity.html</p>
+</div>
+          </div>
+        </div>
+      </div>
+    </article>
+  </body>
+
+</html>
