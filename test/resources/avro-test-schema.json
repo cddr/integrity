@@ -1,0 +1,37 @@
+{
+  "namespace": "example.com",
+  "type": "record",
+  "name": "AvroTestSchema",
+  "fields": [
+    {"name": "boolean", "type": "boolean"},
+    {"name": "int", "type": "int"},
+    {"name": "long", "type": "long"},
+    {"name": "float", "type": "float"},
+    {"name": "double", "type": "double"},
+    {"name": "bytes", "type": "bytes"},
+    {"name": "string", "type": "string"},
+    {"name": "record", "type": {
+      "type": "record",
+      "name": "rec",
+      "fields": [
+        {"name": "a", "type": "string"},
+        {"name": "b", "type": "string"}
+      ]}},
+    {"name": "enum", "type": {
+      "type": "enum",
+      "name": "enum",
+      "symbols": ["a", "b", "c"]}},
+    {"name": "array", "type": {
+      "type": "array",
+      "name": "array",
+      "items": "string"}},
+    {"name": "map", "type": {
+      "type": "map",
+      "name": "map",
+      "values": "long"}},
+    {"name": "fixed", "type": {
+      "type": "fixed",
+      "name": "fixed",
+      "size": 16}}
+  ]
+}
