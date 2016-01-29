@@ -29,7 +29,7 @@
 
 (deftest eq-explainer
   (let [chk (human-walker (s/eq 42))]
-    (is (nil? (chk 42)))    
+    (is (nil? (chk 42)))
     (is (= (chk 43) "43 is not eq with 42"))))
 
 (deftest map-explainer
@@ -41,9 +41,9 @@
            {:bar "42 is not a java.lang.String"}))))
 
 (deftest enum-explainer
-  (let [chk (human-walker (s/enum 2 3 4))]
+  (let [chk (human-walker (s/enum 4 3 2))]
     (is (nil? (chk 2)))
-    (is (= (chk 5) "5 is not one of #{2 3 4}"))))
+    (is (= (chk 5) "5 is not one of #{4 3 2}"))))
 
 (deftest nested-schema
   (let [chk (human-walker {:name s/Str
@@ -53,7 +53,7 @@
     (is (= {:name "42 is not a java.lang.String"
             :info {:email "42 is not a java.lang.String"}}
            (chk {:name 42, :info {:email 42}})))))
-  
+
 
 ;; TODO: This worked when we implemented the explainer by parsing the output of `check` but
 ;; since refactoring to use the human-explain protocol, I can't figure out how to make it
@@ -61,7 +61,7 @@
 ;; me to fix
 ;;
 ;; https://groups.google.com/d/msg/prismatic-plumbing/GXKcbM4Ij-Y/BWuDWml42EsJ
-;;       
+;;
 ;;   (testing "either"
 ;;     (is (= "1 fails all of the following:-
 ;;   it is not a java.lang.String
@@ -74,5 +74,3 @@
 ;;            (human-explain (check (s/either {:email s/Str}
 ;;                                            {:phone s/Str})
 ;;                                  {:email 42}))
-
-
