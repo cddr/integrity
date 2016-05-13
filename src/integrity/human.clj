@@ -5,6 +5,7 @@
 
 (ns integrity.human
   (:require [schema.core :as s]
+            [schema.spec.core :as spec]
             [schema.utils :as utils]
             [taoensso.tower :as tower :refer [*locale*]])
   (:import (schema.utils ValidationError)))
@@ -45,12 +46,14 @@ of that value"
 
 (defn human-walker
   [input-schema]
-  (s/start-walker
-   (fn [s]
-     (let [walk (s/walker s)]
+  (spec/run-checker
+   (fn [s params]
+     (let [walk (spec/checker (s/spec s) params)]
        (fn [x]
          (let [result (walk x)]
+           (println "walked result: " s result)
            (human-explain s result)))))
+   true
    input-schema))
 
 (extend-protocol HumanExplain
@@ -99,15 +102,27 @@ of that value"
 (extend-protocol HumanExplain
   schema.core.MapEntry
   (human-explain [schema result]
+    (println "explaining map entry result: " (str schema) result)
     (if-let [err (second result)]
-      {(first result) err})))
+      (do
+        (println {(:key-schema schema) err})
+        {(:key-schema schema) err}))))
+
+(into {} [(seq {1 "foo"})
+          (seq {2 "foo"})
+          [nil "foo"]])
 
 (extend-protocol HumanExplain
   clojure.lang.PersistentArrayMap
   (human-explain [schema result]
-    (let [m (into {} (map (fn [[schema-key schema-val] res]
-                            (human-explain (s/map-entry schema-key schema-val) res))
-                          schema result))]
+    (println "explaining persistent array map result: " schema result)
+    (let [m (into {} (let [foo (map (fn [[s value]]
+                                      (println "explaining: " s value)
+                                      (seq (human-explain (s/map-entry s ((:key-schema s) schema))
+                                                          value)))
+                                    result)]
+                       (println "foo: " foo)
+                       foo))]
       (if (empty? m)
         nil
         m))))
